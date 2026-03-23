@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: step-cad-backend
+    volumes:
+      - ./backend:/app
+      - ./backend/app/logs:/app/app/logs
+      - uploads_data:/app/uploads
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "8283:8283"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - step-cad-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8283/api
+    container_name: step-cad-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8283/api
+    depends_on:
+      - backend
+    networks:
+      - step-cad-network
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: step-cad-nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - step-cad-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: step-cad-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - step-cad-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: step-cad-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=step_cad_db
+      - POSTGRES_USER=step_admin
+      - POSTGRES_PASSWORD=step_secure_pass_2024
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U step_admin -d step_cad_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - step-cad-network
+    restart: unless-stopped
+
+volumes:
+  uploads_data:
+  redis_data:
+  postgres_data:
+
+networks:
+  step-cad-network:
+    driver: bridge

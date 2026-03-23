@@ -1,0 +1,10 @@
+# Container Warning Logs
+# This file contains warning messages from container operations
+
+[TIMESTAMP] [WARN] High memory usage detected: 85%
+[TIMESTAMP] [WARN] Slow query detected: 2.5s response time
+[TIMESTAMP] [WARN] Deprecated API endpoint used: /api/v1/upload
+[TIMESTAMP] [WARN] Rate limit approaching: 90% of quota
+[TIMESTAMP] [WARN] Certificate expiring in 7 days
+[TIMESTAMP] [WARN] Disk usage above threshold: 75%
+[TIMESTAMP] [WARN] Connection pool nearly exhausted: 95%

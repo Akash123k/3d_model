@@ -1,0 +1,12 @@
+# Container Info Logs
+# This file contains informational messages about container operations
+
+[TIMESTAMP] [INFO] Container initialization started
+[TIMESTAMP] [INFO] Loading configuration files
+[TIMESTAMP] [INFO] Backend service starting on port 8000
+[TIMESTAMP] [INFO] Frontend service starting on port 3000
+[TIMESTAMP] [INFO] Nginx proxy configured
+[TIMESTAMP] [INFO] Database connection established
+[TIMESTAMP] [INFO] Health check passed
+[TIMESTAMP] [INFO] Service ready to accept connections
+

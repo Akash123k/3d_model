@@ -1,0 +1,389 @@
+{
+  "info": {
+    "_postman_id": "3d-model-api-collection",
+    "name": "3D Model API - Test Collection",
+    "description": "Complete API test collection for 3D Model STEP File Processing Application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "File Upload",
+      "item": [
+        {
+          "name": "Upload STEP File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select a .step or .stp file to upload"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": ["{{base_url}}"],
+              "path": ["upload"]
+            },
+            "description": "Upload a STEP file for processing. Returns model_id for tracking."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/upload",
+                  "host": ["{{base_url}}"],
+                  "path": ["upload"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"model_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"filename\": \"robot_arm.step\",\n  \"file_size\": 1048576,\n  \"upload_time\": \"2024-01-15T10:30:00Z\",\n  \"status\": \"completed\"\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Upload Invalid File Type",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Try uploading a non-STEP file (e.g., .txt)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": ["{{base_url}}"],
+              "path": ["upload"]
+            },
+            "description": "Test validation - should reject non-STEP files"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Empty File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Upload an empty file to test validation"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": ["{{base_url}}"],
+              "path": ["upload"]
+            },
+            "description": "Test validation - should reject empty files"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Model Data",
+      "item": [
+        {
+          "name": "Get Complete Model Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}"]
+            },
+            "description": "Get complete model data including assembly tree, dependency graph, and statistics"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"model_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"filename\": \"robot_arm.step\",\n  \"file_size\": 1048576,\n  \"upload_time\": \"2024-01-15T10:30:00Z\",\n  \"status\": \"completed\",\n  \"assembly_tree\": {...},\n  \"dependency_graph\": {...},\n  \"statistics\": {...}\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            {
+              "name": "Model Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"detail\": {\n    \"message\": \"Model with id 'invalid-id' not found\"\n  }\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Assembly Tree",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}/assembly-tree",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}", "assembly-tree"]
+            },
+            "description": "Get assembly tree structure for the model"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"model_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"root_node\": {\n    \"id\": \"#1\",\n    \"label\": \"Assembly\",\n    \"type\": \"ASSEMBLY\",\n    \"children\": []\n  },\n  \"total_nodes\": 15\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Dependency Graph",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}/dependency-graph",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}", "dependency-graph"]
+            },
+            "description": "Get dependency graph showing relationships between entities"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"model_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"nodes\": [\n    {\n      \"id\": \"#1\",\n      \"label\": \"Assembly\",\n      \"type\": \"ASSEMBLY\",\n      \"references\": [\"#2\", \"#3\"],\n      \"referenced_by\": [],\n      \"properties\": {}\n    }\n  ],\n  \"edges\": [\n    {\n      \"source\": \"#1\",\n      \"target\": \"#2\",\n      \"relationship\": \"CONTAINS\"\n    }\n  ],\n  \"total_nodes\": 15,\n  \"total_edges\": 20\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}", "statistics"]
+            },
+            "description": "Get model statistics (solids, faces, edges, vertices, etc.)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"total_solids\": 5,\n  \"total_faces\": 120,\n  \"total_edges\": 350,\n  \"total_vertices\": 500,\n  \"total_surfaces\": 45,\n  \"bounding_box\": {\n    \"min_point\": { \"x\": 0, \"y\": 0, \"z\": 0 },\n    \"max_point\": { \"x\": 100, \"y\": 200, \"z\": 150 },\n    \"dimensions\": { \"x\": 100, \"y\": 200, \"z\": 150 }\n  },\n  \"total_volume\": 1500000,\n  \"total_surface_area\": 85000\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Entity Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}/entity/{{entity_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}", "entity", "{{entity_id}}"]
+            },
+            "description": "Get detailed information about a specific entity (e.g., #123)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"entity_id\": \"#123\",\n  \"entity_type\": \"AXIS2_PLACEMENT_3D\",\n  \"attributes\": {\n    \"name\": \"axis_3d\",\n    \"location\": \"#124\",\n    \"axis\": \"#125\",\n    \"ref_direction\": \"#126\"\n  },\n  \"references\": [\"#124\", \"#125\", \"#126\"],\n  \"referenced_by\": [\"#127\", \"#128\"]\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "API Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the API is running and healthy"
+          },
+          "response": [
+            {
+              "name": "Healthy Response",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"status\": \"healthy\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\"\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error Scenarios",
+      "item": [
+        {
+          "name": "Invalid Model ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/invalid-id-123",
+              "host": ["{{base_url}}"],
+              "path": ["models", "invalid-id-123"]
+            },
+            "description": "Test error handling for non-existent model"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Entity ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/models/{{model_id}}/entity/#999999",
+              "host": ["{{base_url}}"],
+              "path": ["models", "{{model_id}}", "entity", "#999999"]
+            },
+            "description": "Test error handling for non-existent entity"
+          },
+          "response": []
+        },
+        {
+          "name": "Malformed Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invalid\": \"data\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": ["{{base_url}}"],
+              "path": ["upload"]
+            },
+            "description": "Test error handling for malformed upload request (should be form-data)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string",
+      "description": "Base URL for the API. Change this based on your environment."
+    },
+    {
+      "key": "model_id",
+      "value": "550e8400-e29b-41d4-a716-446655440000",
+      "type": "string",
+      "description": "Model ID returned from upload endpoint. Update after uploading a file."
+    },
+    {
+      "key": "entity_id",
+      "value": "#123",
+      "type": "string",
+      "description": "Entity ID for querying specific entities. Update based on actual model data."
+    }
+  ]
+}

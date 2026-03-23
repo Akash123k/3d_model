@@ -1,0 +1,15 @@
+# Container Combined Logs
+# This file contains all logs (INFO, ERROR, WARNING) in chronological order
+
+[TIMESTAMP] [INFO] Container initialization started
+[TIMESTAMP] [INFO] Loading configuration files
+[TIMESTAMP] [WARN] Configuration file not optimized
+[TIMESTAMP] [INFO] Backend service starting on port 8000
+[TIMESTAMP] [INFO] Frontend service starting on port 3000
+[TIMESTAMP] [ERROR] Failed to connect to database - retrying in 5s
+[TIMESTAMP] [INFO] Database connection established
+[TIMESTAMP] [WARN] High memory usage detected: 85%
+[TIMESTAMP] [INFO] Nginx proxy configured
+[TIMESTAMP] [INFO] Health check passed
+[TIMESTAMP] [ERROR] Service timeout after 30s
+[TIMESTAMP] [INFO] Service ready to accept connections

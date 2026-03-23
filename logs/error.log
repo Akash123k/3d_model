@@ -1,0 +1,10 @@
+# Container Error Logs
+# This file contains error messages from container operations
+
+[TIMESTAMP] [ERROR] Failed to connect to database - retrying in 5s
+[TIMESTAMP] [ERROR] Configuration file not found: /app/config.json
+[TIMESTAMP] [ERROR] Port 8000 already in use
+[TIMESTAMP] [ERROR] Memory limit exceeded: 512MB
+[TIMESTAMP] [ERROR] Service timeout after 30s
+[TIMESTAMP] [ERROR] Invalid request format
+[TIMESTAMP] [ERROR] File upload failed: disk space full
